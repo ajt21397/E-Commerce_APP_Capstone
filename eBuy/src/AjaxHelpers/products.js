@@ -27,14 +27,40 @@ export const fetchProducts = async () => {
   };
   
 
-  //this is for limiting the number of products loaded
-  export const fetchLimitedProducts = async (limit = 5) => {
+
+
+  export const fetchProductsDescending = async () => {
     try {
-      const response = await fetch(`${BASE_URL}/products?limit=${limit}`);
+      const response = await fetch(`${BASE_URL}/products?sort=desc`);
       const result = await response.json();
       return result;
     } catch (err) {
       console.error(err);
-      throw err; // Rethrow the error to be caught by the caller if needed
+      throw err;
+    }
+  };
+
+ //fetching all categories
+  export const fetchCategories = async () => {
+    try {
+      const response = await fetch(`${BASE_URL}/products/categories`)
+  
+      const result = await response.json();
+      console.log(result);
+      return result
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+ //fetching a product by a category
+  export const fetchProductsByCategory = async (category) => {
+    try {
+      const response = await fetch(`${BASE_URL}/products/category/${category}`);
+      const result = await response.json();
+      return result;
+    } catch (err) {
+      console.error(err);
+      throw err;
     }
   };
