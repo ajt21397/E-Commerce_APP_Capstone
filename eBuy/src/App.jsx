@@ -1,111 +1,69 @@
 import React, { useState, useEffect } from 'react';
-import { fetchProducts, fetchProductById, fetchProductsDescending, fetchCategories, fetchProductsByCategory } from './AjaxHelpers/products'; // Import your functions
-import './App.css';
+import Navbar from './Components/NavBar';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Home from './Components/Home';
+import Login from './Components/Login';
+import Cart from './Components/Cart'; // Import the Cart component
+
 
 function App() {
-  const [products, setProducts] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [selectedProduct, setSelectedProduct] = useState(null);
-  const [limitedProducts, setLimitedProducts] = useState([]);
-  const [categories, setCategories] = useState([]);
-  const [selectedCategory, setSelectedCategory] = useState(null);
-  const [selectedCategoryProducts, setSelectedCategoryProducts] = useState([]); // State for products based on selected category
-
-
+  const [savedUsername, setSavedUsername] = useState('');
+  const [savedPassword, setSavedPassword] = useState('');
+  const [cart, setCart] = useState(null);
 
   useEffect(() => {
-    fetchProducts()
-      .then(data => {
-        setProducts(data);
-        setIsLoading(false);
-      })
-      .catch(error => console.error(error));
-  }, []);
+    // Fetch or create the cart when the component mounts
+    async function fetchCartData() {
+      try {
+        const response = await fetch(`https://fakestoreapi.com/carts?userId=3`);
+        const cartData = await response.json();
 
+        if (cartData.length === 0) {
+          // If the cart doesn't exist, create a new one
+          const newCartResponse = await fetch('https://fakestoreapi.com/carts', {
+            method: 'POST',
+            body: JSON.stringify({
+              userId: 3,
+              date: new Date().toISOString(),
+              products: [],
+            }),
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          });
 
+          if (!newCartResponse.ok) {
+            throw new Error('Failed to create a new cart');
+          }
 
-  useEffect(() => {
-    fetchProductsDescending()
-      .then(data => setProducts(data))
-      .catch(error => console.error(error));
-  }, []); // Fetch products with descending sort on component mount
-
-  useEffect(() => {
-    fetchCategories()
-      .then(data => {
-        setCategories(data);
-        setIsLoading(false);
-      })
-      .catch(error => console.error(error));
-  }, []);
-
-  useEffect(() => {
-    if (selectedCategory) {
-      fetchProductsByCategory(selectedCategory)
-        .then(data => setSelectedCategoryProducts(data)) // Update the selectedCategoryProducts state
-        .catch(error => console.error(error));
-    } else {
-      // Fetch all products when no specific category is selected
-      fetchProducts()
-        .then(data => setSelectedCategoryProducts(data)) // Update the selectedCategoryProducts state
-        .catch(error => console.error(error));
+          const newCartData = await newCartResponse.json();
+          setCart(newCartData);
+        } else {
+          // Use the existing cart data
+          setCart(cartData[0]);
+        }
+      } catch (error) {
+        console.error('An error occurred while fetching/creating the cart:', error);
+      }
     }
-  }, [selectedCategory]);
 
-
-  const handleProductClick = async (productId) => {
-    try {
-      const productData = await fetchProductById(productId);
-      setSelectedProduct(productData);
-    } catch (error) {
-      console.error('Error fetching product:', error);
-    }
-  };
-
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
+    fetchCartData();
+  }, []);
 
   return (
-    <div className="App">
-      <h1>Ebuy</h1>
+    <Router>
+      <div className="App">
+        <h1 className='title'>Ebuy</h1>
+        <Navbar cart={cart} />
+        <Routes>
+          <Route path="/" element={<Home cart={cart} />} />
+          <Route path="/login" element={<Login savedUsername={savedUsername} savedPassword={savedPassword} />} />
+          <Route path="/cart" element={<Cart cart={cart} />} /> {/* Render the Cart component with the cart prop */}
 
-
-      {/* Select dropdown for choosing category */}
-      <div>
-        <label>Select Category: </label>
-        <select
-          value={selectedCategory || ''}
-          onChange={(e) => setSelectedCategory(e.target.value)}
-        >
-          <option value="">All Categories</option>
-          <option value="jewelery">Jewelery</option>
-          <option value="electronics">Electronics</option>
-          <option value="men's clothing">Men's Clothing</option>
-          <option value="women's clothing">Women's clothing</option>
-          {/* Add more categories here */}
-        </select>
+        </Routes>
+        <div className='center-content'></div>
       </div>
-
-      <ul>
-        {selectedCategoryProducts.map(product => (
-          <li key={product.id}>
-            <button onClick={() => handleProductClick(product.id)}>
-              View Details
-            </button>
-            {product.title}
-          </li>
-        ))}
-      </ul>
-
-      {selectedProduct && (
-        <div>
-          <h2>{selectedProduct.title}</h2>
-          <p>{selectedProduct.description}</p>
-          <strong>${selectedProduct.price}</strong>
-        </div>
-      )}
-    </div>
+    </Router>
   );
 }
 
