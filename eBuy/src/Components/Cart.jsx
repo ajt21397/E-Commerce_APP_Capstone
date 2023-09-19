@@ -1,20 +1,26 @@
 import React from 'react';
 
 function Cart({ cart }) {
-  if (!cart || !cart.products || cart.products.length === 0) {
-    return <p>Your cart is empty.</p>;
-  }
-
   return (
-    <div>
-      <h2>Your Cart</h2>
-      <ul>
-        {cart.products.map((product) => (
-          <li key={product.productId}>
-            Product: {product.productId}, Quantity: {product.quantity}
-          </li>
-        ))}
-      </ul>
+    <div className="cart">
+      <h2>Cart</h2>
+      {cart.products.length === 0 ? (
+        <p>Your cart is empty.</p>
+      ) : (
+        <div>
+          <ul>
+            {cart.products.map((productItem) => (
+              <li key={productItem.productId}>
+                 <img src={productItem.productImage} alt={productItem.productName} /> {/* Display product image */}
+                <p>{productItem.productName}</p>
+                <p>Quantity: {productItem.quantity}</p>
+              </li>
+            ))}
+          </ul>
+          <p>Total: {/* Calculate and display the total price here */}</p>
+          <button>Checkout</button>
+        </div>
+      )}
     </div>
   );
 }
