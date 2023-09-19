@@ -26,7 +26,7 @@ export const fetchProducts = async () => {
 
 
 
-function ProductList({cart}) {
+function ProductList({cart, setCart}) {
   const [products, setProducts] = useState([]);
   const [selectedProductId, setSelectedProductId] = useState(null);
   const [sortingOrder, setSortingOrder] = useState('asc');
@@ -82,37 +82,31 @@ function ProductList({cart}) {
   };
 
 
-  const handleAddToCart = (productId) => {
+  const handleAddToCart = (productId, productName, productImage) => {
+    console.log('Adding product to cart:', productId);
+  
     if (cart) {
-      // Assuming you want to add one item to the cart
       const quantity = 1;
-  
-      // Create a copy of the existing cart products array
       const updatedProducts = [...cart.products];
-  
-      // Check if the product with the given productId already exists in the cart
       const existingProduct = updatedProducts.find((product) => product.productId === productId);
   
       if (existingProduct) {
-        // If the product already exists in the cart, update its quantity
         existingProduct.quantity += quantity;
       } else {
-        // If the product doesn't exist in the cart, add it
-        updatedProducts.push({ productId, quantity });
+        updatedProducts.push({ productId, productName, productImage, quantity }); // Include product image
       }
   
-      // Update the cart object with the updated products array
       const updatedCart = { ...cart, products: updatedProducts };
-  
-      // Set the updated cart in the state or send it to a server/API
-      // You might need to implement an updateCart function for this
-  
-      // For now, let's just log the updated cart
-      console.log(updatedCart);
+      setCart(updatedCart);
+      console.log('Updated cart:', updatedCart);
     } else {
       console.error('Cart data is not available.');
     }
   };
+  
+  
+  
+  
   
   
   
@@ -145,7 +139,7 @@ function ProductList({cart}) {
               <p>Category: {product.category}</p>
               <img src={product.image} alt={product.title} /> {/* Use the <img> element */}
               <button onClick={() => handleDetailsClick(product.id)}>Details</button>
-              <button onClick={() => handleAddToCart(product.id)}>Add to Cart</button>
+              <button onClick={() => handleAddToCart(product.id, product.title, product.image)}>Add to Cart</button>
 
               {selectedProductId === product.id && (
                 <div className='product-details'>

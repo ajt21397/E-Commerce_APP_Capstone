@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+
 
 function Login() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [loggedIn, setLoggedIn] = useState(false);
   const [loginError, setLoginError] = useState(null);
+  const [savedUserId, setSavedUserId] = useState(''); // Define the savedUserId state variable
 
   useEffect(() => {
     // Check if there's a token in local storage
@@ -14,6 +17,9 @@ function Login() {
       setLoggedIn(true);
     }
   }, []);
+
+  const navigate = useNavigate();
+
 
   const handleLogin = async () => {
     try {
@@ -27,6 +33,12 @@ function Login() {
         localStorage.setItem('token', response.data.token);
         setLoggedIn(true);
         setLoginError(null);
+
+        // Save the user ID to a state variable or context
+        setSavedUserId(response.data.userId); // Assuming you have a state variable called savedUserId
+        // Navigate to the Cart page
+      navigate('/cart');
+
       } else {
         setLoggedIn(false);
         setLoginError('Invalid username or password.');
