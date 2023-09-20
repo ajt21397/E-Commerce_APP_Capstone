@@ -1,8 +1,9 @@
 import React from 'react';
+import './Cart.css';
 
 function Cart({ cart }) {
   return (
-    <div className="cart">
+    <div className={`cart${location.pathname === '/cart' ? ' cart-page' : ''}`}>
       <h2>Cart</h2>
       {cart.products.length === 0 ? (
         <p>Your cart is empty.</p>

@@ -1,4 +1,7 @@
 import React, { useEffect, useState } from 'react';
+import './ProductList.css'; // Import your CSS file
+import { useAuth } from './AuthContext'; // Import the AuthContext and useAuth
+
 
 
 // Define a separate function to fetch categories
@@ -32,6 +35,8 @@ function ProductList({cart, setCart}) {
   const [sortingOrder, setSortingOrder] = useState('asc');
   const [selectedCategory, setSelectedCategory] = useState('');
   const [categories, setCategories] = useState([]); // Add state for categories
+  const { isLoggedIn } = useAuth(); // Use the useAuth hook to access isLoggedIn
+
   
   useEffect(() => {
     async function fetchData() {
@@ -56,6 +61,18 @@ function ProductList({cart, setCart}) {
     fetchCategories(); // Fetch categories
 
   }, []);
+
+  useEffect(() => {
+    // Initialize the cart data from localStorage only if the user is logged in
+    if (isLoggedIn) {
+      const storedCart = localStorage.getItem('cart');
+      if (storedCart) {
+        setCart(JSON.parse(storedCart));
+      }
+    }
+    
+    // Fetch products and categories as before
+  }, [setCart, isLoggedIn]);
 
 
 
@@ -84,11 +101,15 @@ function ProductList({cart, setCart}) {
 
   const handleAddToCart = (productId, productName, productImage) => {
     console.log('Adding product to cart:', productId);
+    if (isLoggedIn && cart) {
+      localStorage.setItem('cart', JSON.stringify(cart));
+    }
   
     if (cart) {
       const quantity = 1;
       const updatedProducts = [...cart.products];
       const existingProduct = updatedProducts.find((product) => product.productId === productId);
+      localStorage.setItem('cart', JSON.stringify(cart));
   
       if (existingProduct) {
         existingProduct.quantity += quantity;
