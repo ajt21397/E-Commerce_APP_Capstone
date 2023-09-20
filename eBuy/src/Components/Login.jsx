@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import './Login.css';
 
 
 function Login() {
@@ -36,8 +37,7 @@ function Login() {
 
         // Save the user ID to a state variable or context
         setSavedUserId(response.data.userId); // Assuming you have a state variable called savedUserId
-        // Navigate to the Cart page
-      navigate('/cart');
+        
 
       } else {
         setLoggedIn(false);
@@ -57,7 +57,7 @@ function Login() {
   };
 
   return (
-    <div>
+    <div className='login-container'>
       <h2>Login</h2>
       {loggedIn ? (
         <div>

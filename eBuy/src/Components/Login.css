@@ -1,0 +1,42 @@
+/* Login.css */
+
+/* Center the login container */
+.login-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh; /* Ensure it takes up at least the viewport height */
+    width: 100%;
+  }
+  
+  /* Style the login form */
+  .login-form {
+    text-align: center; /* Center the form elements horizontally */
+    max-width: 300px; /* Adjust the width as needed */
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  }
+  
+  /* Style form inputs and buttons */
+  .login-form input,
+  .login-form button {
+    width: 100%;
+    margin: 10px 0;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  
+  .login-form button {
+    background-color: #007bff;
+    color: #fff;
+    cursor: pointer;
+  }
+  
+  .login-form button:hover {
+    background-color: #0056b3;
+  }
+  

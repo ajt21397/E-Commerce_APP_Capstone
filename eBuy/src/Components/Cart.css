@@ -1,0 +1,48 @@
+/* Cart.css (or your preferred CSS file) */
+/* Cart.css */
+/* Cart.css */
+.cart-container {
+    text-align: center; /* Center the content horizontally */
+  }
+  
+  /* Center vertically only when not in Cart page */
+  .cart:not(.cart-page) {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Center vertically */
+    justify-content: center; /* Center horizontally */
+    min-height: 100vh; /* Ensure it takes up at least the viewport height */
+  }
+  
+  
+  
+  /* Additional styling for your cart content */
+.cart {
+    background-color: #181616;
+    padding: 10px; /* Reduce the padding to make the cards smaller */
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    text-align: center; /* Center the content horizontally */
+  }
+  
+
+  /* Style the product cards in the cart */
+    .cart-item {
+    background-color: #fff; /* Card background color */
+    border-radius: 8px; /* Rounded corners */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Box shadow for a card-like effect */
+    padding: 10px; /* Reduce the padding to make the cards smaller */
+    margin: 20px 0; /* Margin between each card item */
+    display: flex; /* Display items horizontally within the card */
+    align-items: center; /* Center items vertically in the card */
+  }
+  
+  .cart ul {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .cart li {
+    margin: 20px 0;
+  }
+  

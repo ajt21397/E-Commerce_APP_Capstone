@@ -4,6 +4,9 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Home from './Components/Home';
 import Login from './Components/Login';
 import Cart from './Components/Cart'; // Import the Cart component
+import './App.css'; // Import your CSS file
+import { AuthProvider } from './Components/AuthContext'; // Import your AuthProvider
+
 
 
 function App() {
@@ -56,8 +59,9 @@ function App() {
   }, [savedUserId]);
 
   return (
+    <AuthProvider>
     <Router>
-      <div className="App">
+      <div className="page-container">
         <h1 className='title'>Ebuy</h1>
         <Navbar cart={cart} />
         <Routes>
@@ -66,9 +70,9 @@ function App() {
           <Route path="/cart" element={<Cart cart={cart} />} /> {/* Render the Cart component with the cart prop */}
 
         </Routes>
-        <div className='center-content'></div>
       </div>
     </Router>
+    </AuthProvider>
   );
 }
 
