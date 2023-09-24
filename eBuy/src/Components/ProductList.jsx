@@ -36,6 +36,17 @@ function ProductList({cart, setCart}) {
   const [selectedCategory, setSelectedCategory] = useState('');
   const [categories, setCategories] = useState([]); // Add state for categories
   const { isLoggedIn } = useAuth(); // Use the useAuth hook to access isLoggedIn
+  const [selectedSortingOrder, setSelectedSortingOrder] = useState('asc');
+  const [searchQuery, setSearchQuery] = useState(''); //for search bar
+  const [filteredProducts, setFilteredProducts] = useState([]); //for search bar
+
+
+
+  const handleSearchInputChange = (event) => {
+    setSearchQuery(event.target.value);
+  };
+
+
 
   
   useEffect(() => {
@@ -75,6 +86,13 @@ function ProductList({cart, setCart}) {
   }, [setCart, isLoggedIn]);
 
 
+  useEffect(() => {
+    filterProducts();
+  }, [searchQuery, products]);
+  
+  
+
+
 
 
   const handleDetailsClick = async (productId) => {
@@ -85,48 +103,69 @@ function ProductList({cart, setCart}) {
     setSelectedCategory(event.target.value);
   };
 
+
+  //sorting by name
   const sortProductsByName = () => {
-    setSortingOrder((prevSortingOrder) => (prevSortingOrder === 'asc' ? 'desc' : 'asc'));
-    setProducts((prevProducts) =>
-      prevProducts.sort((a, b) => {
-        if (a.name && b.name) {
-          return sortingOrder === 'asc' ? a.name.localeCompare(b.name) : b.name.localeCompare(a.name);
+    setProducts((prevProducts) => {
+      const newSortingOrder = sortingOrder === 'asc' ? 'desc' : 'asc';
+      return [...prevProducts].sort((a, b) => {
+        if (a.title && b.title) {
+          return newSortingOrder === 'asc' ? a.title.localeCompare(b.title) : b.title.localeCompare(a.title);
         } else {
           return 0;
         }
-      })
-    );
+      });
+    });
+    setSortingOrder((prevSortingOrder) => (prevSortingOrder === 'asc' ? 'desc' : 'asc'));
   };
 
-
-  const handleAddToCart = (productId, productName, productImage) => {
-    console.log('Adding product to cart:', productId);
-    if (isLoggedIn && cart) {
-      localStorage.setItem('cart', JSON.stringify(cart));
-    }
   
+  
+  const sortProductsByPrice = () => {
+    setProducts((prevProducts) => {
+      const newSortingOrder = selectedSortingOrder;
+      return [...prevProducts].sort((a, b) => {
+        if (newSortingOrder === 'asc') {
+          return a.price - b.price;
+        } else {
+          return b.price - a.price;
+        }
+      });
+    });
+  };
+  
+  
+
+
+  const handleAddToCart = (productId, productName, productImage, price) => {
     if (cart) {
       const quantity = 1;
       const updatedProducts = [...cart.products];
       const existingProduct = updatedProducts.find((product) => product.productId === productId);
-      localStorage.setItem('cart', JSON.stringify(cart));
   
       if (existingProduct) {
         existingProduct.quantity += quantity;
       } else {
-        updatedProducts.push({ productId, productName, productImage, quantity }); // Include product image
+        updatedProducts.push({ productId, productName, productImage, price, quantity });
       }
   
       const updatedCart = { ...cart, products: updatedProducts };
       setCart(updatedCart);
-      console.log('Updated cart:', updatedCart);
     } else {
       console.error('Cart data is not available.');
     }
   };
+
+  const filterProducts = () => {
+    const filtered = products.filter((product) => {
+      const titleMatches = product.title.toLowerCase().includes(searchQuery.toLowerCase());
+      const descriptionMatches = product.description.toLowerCase().includes(searchQuery.toLowerCase());
+      return titleMatches || descriptionMatches;
+    });
+    setFilteredProducts(filtered);
+  };
   
-  
-  
+
   
   
   
@@ -135,9 +174,40 @@ function ProductList({cart, setCart}) {
   return (
     <div className="product-list-container">
 
-      <button onClick={sortProductsByName}>
-        Sort by Name {sortingOrder === 'asc' ? '▲' : '▼'}
-      </button>
+
+<input
+  type="text"
+  id="search"
+  name="search"
+  value={searchQuery}
+  onChange={handleSearchInputChange}
+  placeholder="Search..."
+  style={{ width: '200px', padding: '8px' }}
+/>
+
+
+
+      {/*Button to sort by name, once to start with the top letter, click again to start with bottom letter */}
+      <button onClick={sortProductsByName}>Sort by Name {sortingOrder === 'asc' ? '▲' : '▼'}</button>
+
+      {/*Button to sort the products by prices, click once to start from highest to low and then lowest to high */}
+      <label htmlFor="sortDropdown">Sort by Price:</label>
+<select
+  id="sortDropdown"
+  value={selectedSortingOrder}
+  onChange={(e) => {
+    setSelectedSortingOrder(e.target.value);
+    sortProductsByPrice(); // Call the sorting function here
+  }}
+>
+  <option value="asc">High to Low</option>
+  <option value="desc">Low to High</option>
+</select>
+
+
+
+
+
 
       <label htmlFor="categoryDropdown">Filter by Category:</label>
       <select id="categoryDropdown" value={selectedCategory} onChange={handleCategorySelect}>
@@ -151,16 +221,20 @@ function ProductList({cart, setCart}) {
 
 
       <div className="product-cards-container">
-        {products
-          .filter((product) => !selectedCategory || product.category === selectedCategory)
-          .map((product) => (
+      {/*To filter through the product list for the search bar as well as the categories of the drop down window */}
+      {filteredProducts
+      .filter((product) => (!selectedCategory || product.category === selectedCategory) && (
+        product.title.toLowerCase().includes(searchQuery.toLowerCase())
+         ))
+        .map((product) => (
             <div key={product.id} className="product-card">
               <h3>{product.title}</h3>
               <p>Price: ${product.price}</p>
               <p>Category: {product.category}</p>
               <img src={product.image} alt={product.title} /> {/* Use the <img> element */}
-              <button onClick={() => handleDetailsClick(product.id)}>Details</button>
-              <button onClick={() => handleAddToCart(product.id, product.title, product.image)}>Add to Cart</button>
+              <p>Description: {product.description}</p> {/* Display the description */}
+              <button onClick={() => handleAddToCart(product.id, product.title, product.image, product.price)}>Add to Cart</button>
+              
 
               {selectedProductId === product.id && (
                 <div className='product-details'>

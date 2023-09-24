@@ -58,11 +58,13 @@ function Login() {
 
   return (
     <div className='login-container'>
-      <h2>Login</h2>
+      <h1>Login</h1>
       {loggedIn ? (
         <div>
           <p>Welcome, {username}! You are logged in.</p>
           <button onClick={handleLogout}>Logout</button>
+          <Link to="/register">Register</Link>
+
         </div>
       ) : (
         <div>

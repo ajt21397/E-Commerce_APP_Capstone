@@ -6,6 +6,7 @@ import Login from './Components/Login';
 import Cart from './Components/Cart'; // Import the Cart component
 import './App.css'; // Import your CSS file
 import { AuthProvider } from './Components/AuthContext'; // Import your AuthProvider
+import Registration from './Components/Registration'; // Import your Registration component
 
 
 
@@ -67,8 +68,9 @@ function App() {
         <Routes>
         <Route path="/" element={<Home cart={cart} setCart={setCart} />} />
           <Route path="/login" element={<Login savedUsername={savedUsername} savedPassword={savedPassword} />} />
-          <Route path="/cart" element={<Cart cart={cart} />} /> {/* Render the Cart component with the cart prop */}
-
+          <Route path="/register" element={<Registration />} />
+          <Route path="/cart" element={<Cart cart={cart} setCart={setCart}/>} /> {/* Render the Cart component with the cart prop */}
+          
         </Routes>
       </div>
     </Router>
