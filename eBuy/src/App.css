@@ -2,22 +2,19 @@
 
 /* Apply centering styles to the page-container */
 .page-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center; /* Center horizontally */
-  justify-content: center; /* Center vertically */
-  min-height: 100vh;
+  
+  background-color: rgb(37, 177, 242);
 }
 
 .container {
-  max-width: 800px;
+  
   padding: 2rem;
   background-color: #dc4747;
   border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 8px rgba(25, 179, 48, 0.1);
   width: 100%;
   box-sizing: border-box;
-  margin: 2rem auto; /* Add margin at the top and bottom for spacing */
+  margin: 2rem auto; 
 }
 
 .title {
@@ -26,7 +23,7 @@
   align-items: center;
 }
 
-/* Home page title */
+
 .Htitle {
   display: flex;
   justify-content: center;
@@ -34,15 +31,9 @@
   color: #dc4747;
 }
 
-/* Rest of your existing CSS */
 
-/* Navbar.css */
-nav {
-  background-color: #333;
-  color: white;
-  position: absolute;
-  top: 0;
-  right: 0;
-  padding: 10px;
-}
+
+
+
+
 
