@@ -2,7 +2,14 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import './NavBar.css';
 
-function Navbar({ cart }) { // Add `cart` as a prop
+//navgation bar function and cart used as a prop
+function Navbar({ cart }) { 
+
+   // Calculate the total quantity of items in the cart
+   const totalQuantity = cart.products.reduce((total, product) => total + product.quantity, 0);
+
+
+  //navagation links to login , register (a template since the API wont register), home, and cart link with the number next to it
   return (
     <nav className='navClass'>
       <ul>
@@ -12,7 +19,7 @@ function Navbar({ cart }) { // Add `cart` as a prop
         {cart && (
           <li>
             <Link to="/cart">
-              Cart ({cart.products.length})
+              Cart ({totalQuantity})
             </Link>
           </li>
         )}

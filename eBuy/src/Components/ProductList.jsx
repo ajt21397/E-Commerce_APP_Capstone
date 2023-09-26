@@ -4,7 +4,7 @@ import { useAuth } from './AuthContext'; // Import the AuthContext and useAuth
 
 
 
-// Define a separate function to fetch categories
+// fetch categories
 export const fetchProductCategories = async () => {
   try {
     const response = await fetch('https://fakestoreapi.com/products/categories');
@@ -28,7 +28,7 @@ export const fetchProducts = async () => {
 };
 
 
-
+//Where I display all my products, sorting, search bar and most cart stuff
 function ProductList({cart, setCart}) {
   const [products, setProducts] = useState([]);
   const [selectedProductId, setSelectedProductId] = useState(null);
@@ -41,10 +41,53 @@ function ProductList({cart, setCart}) {
   const [filteredProducts, setFilteredProducts] = useState([]); //for search bar
 
 
-
+ //for the search bar
   const handleSearchInputChange = (event) => {
     setSearchQuery(event.target.value);
   };
+
+  //for increasing the quantity on the product list
+  const handleIncreaseQuantity = (productId) => {
+    if (cart) {
+      const updatedProducts = cart.products.map((product) => {
+        if (product.productId === productId) {
+          // Increment the quantity for the selected product
+          return { ...product, quantity: product.quantity + 1 };
+        }
+        return product;
+      });
+  
+      const updatedCart = { ...cart, products: updatedProducts };
+      setCart(updatedCart);
+    } else {
+      console.error('Cart data is not available.');
+    }
+  };
+  
+
+  //for decreasing quantity
+  const handleDecreaseQuantity = (productId) => {
+    if (cart) {
+      const updatedProducts = cart.products.map((product) => {
+        if (product.productId === productId) {
+          // Decrement the quantity for the selected product
+          const newQuantity = product.quantity - 1;
+  
+          // Ensure the quantity is never less than 1
+          const updatedQuantity = Math.max(newQuantity, 1);
+  
+          return { ...product, quantity: updatedQuantity };
+        }
+        return product;
+      });
+  
+      const updatedCart = { ...cart, products: updatedProducts };
+      setCart(updatedCart);
+    } else {
+      console.error('Cart data is not available.');
+    }
+  };
+  
 
 
 
@@ -58,7 +101,7 @@ function ProductList({cart, setCart}) {
         // Handle errors here if needed
       }
     }
-
+  
     async function fetchCategories() {
       try {
         const categoriesData = await fetchProductCategories();
@@ -67,11 +110,14 @@ function ProductList({cart, setCart}) {
         // Handle errors here if needed
       }
     }
-
+  
     fetchData();
     fetchCategories(); // Fetch categories
-
-  }, []);
+  }, []); // Add an empty dependency array to run this effect only once
+  
+  // Remove the call to `updateCart` from here
+  
+  
 
   useEffect(() => {
     // Initialize the cart data from localStorage only if the user is logged in
@@ -82,7 +128,7 @@ function ProductList({cart, setCart}) {
       }
     }
     
-    // Fetch products and categories as before
+    // Fetch products and categories
   }, [setCart, isLoggedIn]);
 
 
@@ -91,13 +137,6 @@ function ProductList({cart, setCart}) {
   }, [searchQuery, products]);
   
   
-
-
-
-
-  const handleDetailsClick = async (productId) => {
-    setSelectedProductId(productId);
-  };
 
   const handleCategorySelect = (event) => {
     setSelectedCategory(event.target.value);
@@ -120,7 +159,7 @@ function ProductList({cart, setCart}) {
   };
 
   
-  
+  //sorting by price, high to low, and low to high
   const sortProductsByPrice = () => {
     setProducts((prevProducts) => {
       const newSortingOrder = selectedSortingOrder;
@@ -137,25 +176,44 @@ function ProductList({cart, setCart}) {
   
 
 
+  //where my items go to the shopping cart
   const handleAddToCart = (productId, productName, productImage, price) => {
+    console.log('Adding to cart:', productId, productName);
+  
     if (cart) {
-      const quantity = 1;
-      const updatedProducts = [...cart.products];
-      const existingProduct = updatedProducts.find((product) => product.productId === productId);
+      const existingProduct = cart.products.find((product) => product.productId === productId);
   
       if (existingProduct) {
-        existingProduct.quantity += quantity;
-      } else {
-        updatedProducts.push({ productId, productName, productImage, price, quantity });
-      }
+        // If the product is already in the cart, increase its quantity
+        console.log('Product already in cart. Incrementing quantity.');
+        const updatedProducts = cart.products.map((product) => {
+          if (product.productId === productId) {
+            return { ...product, quantity: product.quantity + 1 };
+          }
+          return product;
+        });
   
-      const updatedCart = { ...cart, products: updatedProducts };
-      setCart(updatedCart);
+        const updatedCart = { ...cart, products: updatedProducts };
+        setCart(updatedCart);
+      } else {
+        // If the product is not in the cart, add it with a quantity of 1
+        console.log('Product not in cart. Adding with quantity 1.');
+        const updatedCart = {
+          ...cart,
+          products: [
+            ...cart.products,
+            { productId, productName, productImage, price, quantity: 1 },
+          ],
+        };
+        setCart(updatedCart);
+      }
     } else {
       console.error('Cart data is not available.');
     }
   };
+  
 
+  //for the search bar specifically filtering words and matching it with the items' title, not case sensitive 
   const filterProducts = () => {
     const filtered = products.filter((product) => {
       const titleMatches = product.title.toLowerCase().includes(searchQuery.toLowerCase());
@@ -167,23 +225,20 @@ function ProductList({cart, setCart}) {
   
 
   
-  
-  
-  
 
   return (
     <div className="product-list-container">
 
-
-<input
-  type="text"
-  id="search"
-  name="search"
-  value={searchQuery}
-  onChange={handleSearchInputChange}
-  placeholder="Search..."
-  style={{ width: '200px', padding: '8px' }}
-/>
+    {/*for search bar */}
+    <input
+      type="text"
+      id="search"
+      name="search"
+      value={searchQuery}
+      onChange={handleSearchInputChange}
+      placeholder="Search..."
+      style={{ width: '200px', padding: '8px' }}
+    />
 
 
 
@@ -192,19 +247,17 @@ function ProductList({cart, setCart}) {
 
       {/*Button to sort the products by prices, click once to start from highest to low and then lowest to high */}
       <label htmlFor="sortDropdown">Sort by Price:</label>
-<select
-  id="sortDropdown"
-  value={selectedSortingOrder}
-  onChange={(e) => {
-    setSelectedSortingOrder(e.target.value);
-    sortProductsByPrice(); // Call the sorting function here
-  }}
->
-  <option value="asc">High to Low</option>
-  <option value="desc">Low to High</option>
-</select>
-
-
+      <select
+        id="sortDropdown"
+        value={selectedSortingOrder}
+        onChange={(e) => {
+          setSelectedSortingOrder(e.target.value);
+          sortProductsByPrice(); 
+          }}
+      >
+      <option value="asc">High to Low</option>
+      <option value="desc">Low to High</option>
+      </select>
 
 
 
@@ -233,8 +286,13 @@ function ProductList({cart, setCart}) {
               <p>Category: {product.category}</p>
               <img src={product.image} alt={product.title} /> {/* Use the <img> element */}
               <p>Description: {product.description}</p> {/* Display the description */}
-              <button onClick={() => handleAddToCart(product.id, product.title, product.image, product.price)}>Add to Cart</button>
               
+              {/* Display quantity and buttons to increase/decrease */}
+              <p>Quantity: {product.quantity}</p>
+              <button onClick={() => handleAddToCart(product.id, product.title, product.image, product.price)}>Add to Cart</button>
+              {/* Add a button to decrease quantity */}
+              <button onClick={() => handleIncreaseQuantity(product.id)}>+</button> 
+              <button onClick={() => handleDecreaseQuantity(product.id)}>-</button>              
 
               {selectedProductId === product.id && (
                 <div className='product-details'>

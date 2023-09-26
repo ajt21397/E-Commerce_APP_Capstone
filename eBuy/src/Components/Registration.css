@@ -5,7 +5,11 @@
     align-items: center;
     justify-content: center;
     height: 100vh; /* Make the form take the full height of the viewport */
-    background-color: #d61c1c; /* Set a background color */
+    background:
+        linear-gradient(rgb(14, 55, 215), transparent),
+        linear-gradient(to top left, lime, transparent),
+        linear-gradient(to top right, blue, transparent);
+    background-blend-mode: screen;
     padding: 20px; /* Add some padding for spacing */
   }
   

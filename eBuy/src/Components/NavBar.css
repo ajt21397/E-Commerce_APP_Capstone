@@ -1,7 +1,11 @@
 /* Navbar.css */
 
 .navClass {
-    background-color: #efe519;
+    background:
+        linear-gradient(rgb(248, 16, 4), transparent),
+        linear-gradient(to top left, rgb(223, 239, 8), transparent),
+        linear-gradient(to top right, rgb(242, 50, 11), transparent);
+    background-blend-mode: screen;
     color: rgb(174, 19, 19);
     padding: 10px;
   }
@@ -9,9 +13,9 @@
   /* Style the unordered list (ul) to display horizontally */
   .navClass ul {
     list-style: none; /* Remove default list bullets */
-    padding: 0; /* Remove default padding */
-    display: flex; /* Use flexbox to arrange items horizontally */
-    justify-content: space-between; /* Add space between items */
+    padding: 0; 
+    display: flex; 
+    justify-content: space-between; 
   }
   
   /* Style the list items (li) as inline elements */

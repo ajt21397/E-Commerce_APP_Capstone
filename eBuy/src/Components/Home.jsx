@@ -9,4 +9,3 @@ export default function Home({ cart, setCart }) {
     </div>
   );
 }
-

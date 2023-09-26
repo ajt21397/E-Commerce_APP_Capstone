@@ -15,7 +15,11 @@
     text-align: center; /* Center the form elements horizontally */
     max-width: 300px; /* Adjust the width as needed */
     padding: 20px;
-    background-color: #fff;
+    background:
+        linear-gradient(rgb(20, 4, 4), transparent),
+        linear-gradient(to top left, rgb(244, 248, 244), transparent),
+        linear-gradient(to top right, blue, transparent);
+    background-blend-mode: screen;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   }
@@ -39,4 +43,8 @@
   .login-form button:hover {
     background-color: #0056b3;
   }
+  
+
+
+  
   
