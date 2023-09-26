@@ -1,10 +1,14 @@
 import React from 'react';
 import './Cart.css';
 import { useState } from 'react';
+import CheckoutForm from './CheckoutForm'; // Import the CheckoutForm component
+
 
 function Cart({ cart,setCart }) {
 
   const [showCheckoutMessage, setShowCheckoutMessage] = useState(false);
+  const [showCheckoutForm, setShowCheckoutForm] = useState(false);
+  const [showCheckoutSuccess, setShowCheckoutSuccess] = useState(false);
 
 
   console.log('Cart:', cart);
@@ -87,11 +91,23 @@ function Cart({ cart,setCart }) {
         console.log('Checkout button clicked');
 
         
-        // Resetting the cart, customer has bought something 
-        setCart({ products: [] });
         
         // Show the checkout message
         setShowCheckoutMessage(true);
+
+        setShowCheckoutForm(true);
+
+      };
+
+
+      const handleCheckoutSubmit = (formData) => {
+        // Perform the submission logic, and when it succeeds, call the onSuccess callback
+        // Assuming successful payment processing, trigger the success callback
+        setCart({ products: [] }); // Reset the cart here
+      
+        if (onSuccess) {
+          onSuccess();
+        }
       };
       
     
@@ -117,12 +133,14 @@ function Cart({ cart,setCart }) {
             ))}
           </ul>
           <p>Total: ${calculateTotalPrice().toFixed(2)}</p> {/* Display the total price */}
-          {showCheckoutMessage ? (
-          <p>Thanks for shopping at eBuy, enjoy your items!</p>
-        ) : (
-          <button onClick={handleCheckout}>Checkout</button>
-        )}
-        {console.log('showCheckoutMessage:', showCheckoutMessage)}
+          {showCheckoutForm ? (
+          // Render the checkout form component if showCheckoutForm is true
+          <CheckoutForm onSubmit={handleCheckoutSubmit} onSuccess={() => setShowCheckoutSuccess(true)} />
+          ) : (
+          // Display the "Checkout" button
+           <button onClick={handleCheckout}>Checkout</button>
+          )}
+
         </div>
       )}
     </div>
