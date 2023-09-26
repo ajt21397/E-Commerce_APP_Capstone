@@ -1,7 +1,10 @@
 import React from 'react';
 import './Cart.css';
+import { useState } from 'react';
 
 function Cart({ cart,setCart }) {
+
+  const [showCheckoutMessage, setShowCheckoutMessage] = useState(false);
 
 
   console.log('Cart:', cart);
@@ -12,7 +15,7 @@ function Cart({ cart,setCart }) {
     const calculateTotalPrice = () => {
       if (cart) {
         return cart.products.reduce((total, product) => {
-          // Debugging: Log the values of price, quantity, and intermediate totals
+          //  Logging the values of price, quantity, and intermediate totals
           console.log(`Price: ${product.price}, Quantity: ${product.quantity}, Total: ${total}`);
           
           // Ensure that price and quantity are numbers
@@ -78,8 +81,21 @@ function Cart({ cart,setCart }) {
           console.error('Cart data is not available.');
         }
       };
+
+      const handleCheckout = () => {
+        // Perform any necessary checkout logic here
+        console.log('Checkout button clicked');
+
+        
+        // Resetting the cart, customer has bought something 
+        setCart({ products: [] });
+        
+        // Show the checkout message
+        setShowCheckoutMessage(true);
+      };
       
     
+  //the return renders the buttons in the cart itself to add, decrease and remove it
   return (
     <div className={`cart${location.pathname === '/cart' ? ' cart-page' : ''}`}>
       <h2>Cart</h2>
@@ -94,14 +110,19 @@ function Cart({ cart,setCart }) {
                 <p>{productItem.productName}</p>
                 <p>{productItem.price}</p>
                 <p>Quantity: {productItem.quantity}</p>
-                <button onClick={() => handleIncreaseQuantity(productItem.productId)}>Increase</button>
-                <button onClick={() => handleDecreaseQuantity(productItem.productId)}>Decrease</button>
+                <button onClick={() => handleIncreaseQuantity(productItem.productId)}>+</button>
+                <button onClick={() => handleDecreaseQuantity(productItem.productId)}>-</button>
                 <button onClick={() => handleRemoveFromCart(productItem.productId)}>Remove</button>
               </li>
             ))}
           </ul>
           <p>Total: ${calculateTotalPrice().toFixed(2)}</p> {/* Display the total price */}
-          <button>Checkout</button>
+          {showCheckoutMessage ? (
+          <p>Thanks for shopping at eBuy, enjoy your items!</p>
+        ) : (
+          <button onClick={handleCheckout}>Checkout</button>
+        )}
+        {console.log('showCheckoutMessage:', showCheckoutMessage)}
         </div>
       )}
     </div>

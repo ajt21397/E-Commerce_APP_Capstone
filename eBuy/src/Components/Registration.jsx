@@ -3,7 +3,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import './Registration.css';
 
-
+//Mainly made this for the pure template of the website, it does not work with the API because you can't register any one to it
+//you can only login with the username and password of existing users already built in with the API
 function Registration() {
     const navigate = useNavigate(); 
     const [formData, setFormData] = useState({
@@ -24,7 +25,6 @@ function Registration() {
           return;
         }
     
-        // Perform registration logic here (e.g., send data to a server)
         // Redirect to the login page upon successful registration
         navigate('/login');
       };

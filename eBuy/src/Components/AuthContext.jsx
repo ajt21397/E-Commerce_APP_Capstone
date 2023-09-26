@@ -5,6 +5,8 @@ const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [cart, setCart] = useState(/* Initial cart data here */);
+
 
   // Check authentication status when the component mounts
   useEffect(() => {
@@ -22,7 +24,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ isLoggedIn }}>
+    <AuthContext.Provider value={{ isLoggedIn, cart, setCart }}>
       {children}
     </AuthContext.Provider>
   );

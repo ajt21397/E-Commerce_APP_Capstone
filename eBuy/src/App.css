@@ -1,9 +1,13 @@
 /* App.css */
 
-/* Apply centering styles to the page-container */
+/* Applying centering styles to the page-container */
 .page-container {
   
-  background-color: rgb(37, 177, 242);
+  background:
+  linear-gradient(rgb(11, 10, 10), transparent),
+  linear-gradient(to top left, rgb(243, 15, 15), transparent),
+  linear-gradient(to top right, blue, transparent);
+  background-blend-mode: screen;
 }
 
 .container {

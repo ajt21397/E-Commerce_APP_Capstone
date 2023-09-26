@@ -18,7 +18,11 @@
   
   /* Additional styling for your cart content */
 .cart {
-    background-color: #181616;
+  background:
+  linear-gradient(rgb(6, 228, 6), transparent),
+  linear-gradient(to top left, rgb(13, 13, 13), transparent),
+  linear-gradient(to top right, rgb(24, 173, 248), transparent);
+background-blend-mode: screen;
     padding: 10px; /* Reduce the padding to make the cards smaller */
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
