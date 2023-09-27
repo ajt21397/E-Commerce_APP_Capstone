@@ -2,7 +2,8 @@
 Creating an e-commerce site for my capstone project
 
 ## Site Deployment
-https://subtle-narwhal-98f6dd.netlify.app/
+ Before checkform : https://subtle-narwhal-98f6dd.netlify.app/
+ After Checkform : https://fastidious-piroshki-1efa13.netlify.app/
 
 ## Some details for using this API for the website
 ### The website is used to create a workable ecommerce site. This API does not take data to register an account. The
