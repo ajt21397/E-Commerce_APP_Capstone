@@ -115,7 +115,7 @@ function ProductList({cart, setCart}) {
     fetchCategories(); // Fetch categories
   }, []); // Add an empty dependency array to run this effect only once
   
-  // Remove the call to `updateCart` from here
+  
   
   
 

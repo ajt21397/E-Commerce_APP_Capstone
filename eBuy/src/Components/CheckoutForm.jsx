@@ -22,10 +22,7 @@ function CheckoutForm({ onSubmit, onSuccess }) {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // Perform client-side validation here (e.g., check for required fields)
 
-    // Send the form data to the server for payment processing
-    // You can use an API like Stripe to handle payments securely
 
     // Assuming a successful payment, trigger the success callback
     if (onSubmit) {
